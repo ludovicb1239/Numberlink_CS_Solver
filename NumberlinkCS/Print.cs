@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Numberlink
+﻿namespace Numberlink
 {
     public class Print
     {

@@ -70,7 +70,7 @@ namespace Numberlink
                                     MoveCursorPaper(paper, pos);
                                 }
                                 Thread.Sleep(delayms);
-                                MoveCursorPaper(paper,next);
+                                MoveCursorPaper(paper, next);
                                 Thread.Sleep(delayms);
                                 ClickCursor();
                                 Thread.Sleep(delayms);

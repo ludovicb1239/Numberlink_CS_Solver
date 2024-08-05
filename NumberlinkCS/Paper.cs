@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.Intrinsics.X86;
+﻿using System.Drawing;
 
 namespace Numberlink
 {
@@ -16,7 +13,7 @@ namespace Numberlink
         const int W = 0b1000;
 
         static readonly public int[] DIRS = { N, E, S, W };
-        static readonly public int[] MIR = { 0, S, W, 0, N, 0, 0, 0, E, 0, 0, 0, 0, 0, 0, 0};
+        static readonly public int[] MIR = { 0, S, W, 0, N, 0, 0, 0, E, 0, 0, 0, 0, 0, 0, 0 };
         static readonly public bool[] DIAG = new bool[16];
 
         public int Width { get; set; }
@@ -25,8 +22,8 @@ namespace Numberlink
         public int[] Vctr = new int[16];
         public int[] Crnr = new int[16];
 
-        public List<char> Table = new List<char>();
-        public List<int> Con = new List<int>();
+        public List<char> Table = new();
+        public List<int> Con = new();
 
         public bool[] source;
         public int[] end;
@@ -47,7 +44,7 @@ namespace Numberlink
 
         public static Paper NewPaper(int width, int height, char[] table)
         {
-            var paper = new Paper();
+            Paper paper = new();
 
             // Pad the given table with #, to make boundary checks easier
             int w = width + 2, h = height + 2;
@@ -89,9 +86,7 @@ namespace Numberlink
 
             // Final
             if (pos == 0)
-            {
                 return Validate(paper);
-            }
 
             int w = paper.Width;
             if (paper.source[pos])
@@ -104,17 +99,13 @@ namespace Numberlink
                         if (paper.Con[pos - w + 1] != (S | W))
                         {
                             if (TryConnection(paper, pos, E))
-                            {
                                 return true;
-                            }
                         }
                         // South connections can create a forced SE position
                         if (CheckImplicitSE(paper, pos))
                         {
                             if (TryConnection(paper, pos, S))
-                            {
                                 return true;
-                            }
                         }
                         break;
                     // If the source is already connected
@@ -141,9 +132,7 @@ namespace Numberlink
                         if (paper.canSW[pos] && CheckSWLane(paper, pos) && CheckImplicitSE(paper, pos))
                         {
                             if (TryConnection(paper, pos, S))
-                            {
                                 return true;
-                            }
                         }
                         // Ensure we don't block off any diagonals (NE and NW don't seem very important)
                         if (paper.Con[pos - w + 1] != (S | W) && paper.Con[pos - w - 1] != (S | E))
@@ -166,17 +155,13 @@ namespace Numberlink
                         if (paper.Con[pos - w + 1] == (N | E) || paper.source[pos - w + 1] && (paper.Con[pos - w + 1] & (N | E)) != 0)
                         {
                             if (TryConnection(paper, pos, E))
-                            {
                                 return true;
-                            }
                         }
                         // Ensure we don't block off any diagonals
                         if (paper.Con[pos - w + 1] != (S | W) && paper.Con[pos - w - 1] != (S | E) && CheckImplicitSE(paper, pos))
                         {
                             if (TryConnection(paper, pos, S))
-                            {
                                 return true;
-                            }
                         }
                         break;
                 }
@@ -191,9 +176,7 @@ namespace Numberlink
             {
                 // Con = 0 means we are crossing a SE line, N|W means a NW
                 if (paper.Con[pos] != W)
-                {
                     return false;
-                }
                 pos += paper.Width - 1;
             }
             return true;
@@ -255,13 +238,9 @@ namespace Numberlink
             dir2 = dirs & ~dir;
             bool res;
             if (dir2 == 0)
-            {
                 res = ChooseConnection(paper, paper.next[pos1]);
-            }
             else
-            {
                 res = TryConnection(paper, pos1, dir2);
-            }
 
             // Recreate the state, but not if a solution was found,
             // since we'll let it bubble all the way to the caller
@@ -300,9 +279,7 @@ namespace Numberlink
                             if ((paper.Con[p] & dir) != 0)
                             {
                                 if (cand != old)
-                                {
                                     next = cand;
-                                }
                             }
                             else if (vtable[cand] == alpha)
                             {

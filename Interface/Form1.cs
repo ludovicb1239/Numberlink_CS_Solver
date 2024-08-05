@@ -1,7 +1,5 @@
-using System.Diagnostics;
-using System.Numerics;
-using System.Threading;
 using Numberlink;
+using System.Numerics;
 
 namespace Interface
 {

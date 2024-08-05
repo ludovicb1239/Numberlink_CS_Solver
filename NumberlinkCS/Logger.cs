@@ -14,7 +14,7 @@ namespace Numberlink
             using (Graphics g = Graphics.FromImage(bitmap))
             {
                 g.Clear(Color.Black);
-        
+
                 // Draw grid lines
                 Pen pen = new Pen(Color.Gray, 2);
                 for (int x = 1; x <= paper.Width - 1; x++)
@@ -48,7 +48,7 @@ namespace Numberlink
         public static Bitmap DrawSolution(Paper paper)
         {
             Bitmap original = GenerateGameBoardBitmap(paper);
-        
+
             using (Graphics g = Graphics.FromImage(original))
             {
                 int w = paper.Width, h = paper.Height;
