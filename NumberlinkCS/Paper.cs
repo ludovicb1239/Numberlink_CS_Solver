@@ -32,7 +32,7 @@ namespace Numberlink
 
         public int[] next;
 
-        public Color[] colorLookup;
+        public Dictionary<char, Color> colorLookup;
 
         public Paper()
         {
@@ -83,6 +83,13 @@ namespace Numberlink
         static bool ChooseConnection(Paper paper, int pos)
         {
             Calls++;
+
+            // { 
+            //     Debug Purposes, will save every step of process
+            //
+            //     Bitmap gameBoardBitmap = Logger.DrawSolution(paper);
+            //     gameBoardBitmap.Save($"board{Calls}.png");
+            // }
 
             // Final
             if (pos == 0)

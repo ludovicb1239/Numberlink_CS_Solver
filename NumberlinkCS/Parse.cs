@@ -1,4 +1,7 @@
-﻿namespace Numberlink
+﻿using System.ComponentModel;
+using System.Drawing;
+
+namespace Numberlink
 {
     public class ParseError : Exception
     {
@@ -30,15 +33,27 @@
             }
 
             var table = new List<char>(width * height);
+
+            var colors = new List<Color> { Color.Red, Color.Green, Color.Yellow, Color.Blue, Color.Olive, Color.Lime, Color.Cyan, Color.DarkBlue, Color.Turquoise, Color.Pink, Color.Orange, Color.Purple };
+
+            Dictionary<char, Color> colorsLook = new();
+            colorsLook.Add(Paper.EMPTY, Color.White);
+            colorsLook.Add(Paper.GRASS, Color.Magenta);
             foreach (var line in lines)
             {
                 foreach (var c in line)
                 {
                     table.Add(c);
+                    if (!colorsLook.ContainsKey(c))
+                    {
+                        Color newColor = colors[c % colors.Count];
+                        colorsLook.Add(c, newColor);
+                    }
                 }
             }
-
-            return Paper.NewPaper(width, height, table.ToArray());
+            Paper paper = Paper.NewPaper(width, height, table.ToArray());
+            paper.colorLookup = colorsLook;
+            return paper;
         }
     }
 }

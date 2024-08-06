@@ -65,7 +65,12 @@ namespace Numberlink
                     }
                 }
                 Paper p = Paper.NewPaper(sizeX, sizeY, table.ToArray());
-                p.colorLookup = colors.ToArray();
+
+                p.colorLookup = new();
+                for (int i =  0; i < colors.Count; i++)
+                {
+                    p.colorLookup.Add((char)(i+'A'), colors[i]);
+                }
 
                 return p;
             }

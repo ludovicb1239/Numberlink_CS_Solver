@@ -26,10 +26,6 @@ namespace Numberlink
                     g.DrawLine(pen, 0, y * cellSize, width, y * cellSize);
                 }
 
-                // Draw points for start and end positions
-                if (paper.colorLookup.Length < 2)
-                    return null;
-
                 var table = Print.FillTable(paper);
                 for (int y = 1; y < paper.Height - 1; y++)
                 {
@@ -38,7 +34,7 @@ namespace Numberlink
                         int pos = y * paper.Width + x;
                         if (paper.source[pos] && table[pos] != Paper.EMPTY && table[pos] >= 'A')
                         {
-                            DrawPoint(g, x - 1, y - 1, paper.colorLookup[table[pos] - 'A'], cellSize, 30);
+                            DrawPoint(g, x - 1, y - 1, paper.colorLookup[table[pos]], cellSize, 30);
                         }
                     }
                 }
@@ -60,7 +56,7 @@ namespace Numberlink
                         int next = pos + paper.Vctr[dir];
                         if ((paper.Con[pos] & dir) != 0 && table[next] == table[pos])
                         {
-                            DrawLine(g, PosToLocal(paper, pos), PosToLocal(paper, next), paper.colorLookup[table[pos] - 'A'], 10);
+                            DrawLine(g, PosToLocal(paper, pos), PosToLocal(paper, next), paper.colorLookup[table[pos]], 10);
                         }
                     }
                 }
