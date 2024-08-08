@@ -5,75 +5,95 @@ namespace Numberlink
 {
     public class Reader
     {
-        public Vector2 topLeftCorner;
-        public Vector2 bottomRightCorner;
         public int sizeX;
         public int sizeY;
 
-        public Paper ScanGameboard()
+        public bool ScanGameboard(Bitmap input, out Paper p)
         {
-            Paper paper = new();
-            paper.Width = sizeX;
-            paper.Height = sizeY;
-
-            int width = (int)(bottomRightCorner.X - topLeftCorner.X);
-            int height = (int)(bottomRightCorner.Y - topLeftCorner.Y);
+            int width = input.Width;
+            int height = input.Height;
 
             var table = new List<char>(width * height);
 
-            using (Bitmap bitmap = new Bitmap(width, height))
+            float cellSizeX = width / sizeX;
+            float cellSizeY = height / sizeY;
+            List<Color> colors = new();
+            Dictionary<Color, int> colorAndCount = new();
+            for (short idy = 0; idy < sizeY; idy += 1)
             {
-                // Use the Graphics object to copy the pixel from the screen
-                using (Graphics g = Graphics.FromImage(bitmap))
+                for (short idx = 0; idx < sizeX; idx += 1)
                 {
-                    g.CopyFromScreen((int)topLeftCorner.X, (int)topLeftCorner.Y, 0, 0, new Size(width, height));
-                }
+                    int x = (int)(idx * cellSizeX + cellSizeX / 2f);
+                    int y = (int)(idy * cellSizeY + cellSizeY / 2f);
 
+                    Color pixelColor = input.GetPixel(x, y);
 
-                float cellSizeX = width / sizeX;
-                float cellSizeY = height / sizeY;
-                List<Color> colors = new();
-                for (short idy = 0; idy < sizeY; idy += 1)
-                {
-                    for (short idx = 0; idx < sizeX; idx += 1)
+                    // Output the color of the pixel
+                    //Console.WriteLine($"The color of the pixel at ({x}, {y}) is: {pixelColor}");
+
+                    char val = Paper.EMPTY;
+
+                    if (pixelColor.GetBrightness() > 0.1f)
                     {
-                        int x = (int)(idx * cellSizeX + cellSizeX / 2f);
-                        int y = (int)(idy * cellSizeY + cellSizeY / 2f);
-
-                        Color pixelColor = bitmap.GetPixel(x, y);
-
-                        // Output the color of the pixel
-                        //Console.WriteLine($"The color of the pixel at ({x}, {y}) is: {pixelColor}");
-
-                        char val = Paper.EMPTY;
-
-                        if (pixelColor.GetBrightness() > 0.1f)
+                        if (colors.Contains(pixelColor))
                         {
-                            if (colors.Contains(pixelColor))
-                            {
-                                val = (char)(colors.IndexOf(pixelColor) + 'A');
-                            }
-                            else
-                            {
-                                val = (char)(colors.Count() + 'A');
-                                colors.Add(pixelColor);
-                            }
+                            val = (char)(colors.IndexOf(pixelColor) + 'A');
+                            colorAndCount[pixelColor] += 1;
                         }
-                        table.Add(val);
-                        //else
-                        //Console.WriteLine($"Color is dark");
+                        else
+                        {
+                            val = (char)(colors.Count() + 'A');
+                            colors.Add(pixelColor);
+                            colorAndCount.Add(pixelColor, 1);
+                        }
+                    }
+                    table.Add(val);
+                }
+            }
+
+            // Validate the board
+            foreach(int count in colorAndCount.Values)
+            {
+                if (count != 2)
+                {
+                    p = null;
+                    return false;
+                }
+            }
+
+            p = Paper.NewPaper(sizeX, sizeY, table.ToArray());
+
+            p.colorLookup = new();
+            for (int i =  0; i < colors.Count; i++)
+            {
+                p.colorLookup.Add((char)(i+'A'), colors[i]);
+            }
+
+            return true;
+        }
+        public bool validateGameboard(Bitmap input)
+        {
+            int width = input.Width;
+            int height = input.Height;
+            float cellSizeX = width / sizeX;
+            float cellSizeY = height / sizeY;
+
+            for (short idy = 0; idy < sizeY; idy += 1)
+            {
+                for (short idx = 0; idx < sizeX; idx += 1)
+                {
+                    int x = (int)(idx * cellSizeX + cellSizeX / 2f);
+                    int y = (int)(idy * cellSizeY + cellSizeY / 2f);
+
+                    Color pixelColor = input.GetPixel(x, y);
+                    // Checks if every box is colored
+                    if (pixelColor.GetBrightness() < 0.1f)
+                    {
+                        return false;
                     }
                 }
-                Paper p = Paper.NewPaper(sizeX, sizeY, table.ToArray());
-
-                p.colorLookup = new();
-                for (int i =  0; i < colors.Count; i++)
-                {
-                    p.colorLookup.Add((char)(i+'A'), colors[i]);
-                }
-
-                return p;
             }
+            return true;
         }
     }
 }

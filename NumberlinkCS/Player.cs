@@ -19,9 +19,9 @@ namespace Numberlink
         {
             return value * 65535.0 / screenSize;
         }
-        public void Play(Paper paper)
+        public void Play(Paper paper, bool clickLastColor = true)
         {
-            int delayms = 30;
+            int delayms = 55;
             int w = paper.Width, h = paper.Height;
             char[] table = new char[w * h];
             paper.Table.CopyTo(table);
@@ -71,9 +71,13 @@ namespace Numberlink
                                 }
                                 Thread.Sleep(delayms);
                                 MoveCursorPaper(paper, next);
-                                Thread.Sleep(delayms);
-                                ClickCursor();
-                                Thread.Sleep(delayms);
+                                Thread.Sleep(2*delayms);
+                                if (clickLastColor || table.Contains(Paper.EMPTY))
+                                {
+                                    //Dont release on the last color, so that the program can check that it did no mistakes
+                                    ClickCursor();
+                                    Thread.Sleep(delayms);
+                                }
                             }
                         }
                     }
@@ -116,7 +120,7 @@ namespace Numberlink
             // Move the mouse to the specified coordinates
             sim.Mouse.MoveMouseTo(absoluteX, absoluteY);
         }
-        void ClickCursor()
+        public void ClickCursor()
         {
             sim.Mouse.LeftButtonClick();
         }

@@ -6,8 +6,6 @@ namespace Interface
     public partial class Form1 : Form
     {
         bool play = false;
-        int sidesX = 9;
-        int sidesY = 9;
         public Form1()
         {
             InitializeComponent();
@@ -18,83 +16,112 @@ namespace Interface
 
         private void SolveButton_Click(object sender, EventArgs e)
         {
-            play = true;
+            play = !play;
+            SolveButton.Text = play ? "Stop" : "Play";
         }
         void ContinuousScan()
         {
             while (true)
             {
+
+                Bitmap bitmap = TakeScreenshotRegion();
+                bool didFind = false;
+                for(int sides = 5; sides < 16;  sides++)
+                {
+                    if (ScanAndPlay(sides, sides, bitmap))
+                    {
+                        didFind = true;
+                        break;
+                    }
+                }
+                if (!didFind)
+                {
+                    OutputImageBox.Invoke(new Action(() =>
+                    {
+                        InputImageBox.Image = bitmap;
+                        OutputImageBox.Image = null;
+                        outLabel.Text = "Could not find puzzle in frame";
+                    }));
+                }
                 Thread.Sleep(100);
-                ScanAndPlay();
             }
         }
 
-        void ScanAndPlay()
+        bool ScanAndPlay(int x, int y, Bitmap bitmap)
         {
             Reader paper_reader = new();
             Player player = new();
             Vector2 topLeft = new(1080, 166);
             Vector2 boardSize = new(715, 715);
 
-            paper_reader.topLeftCorner = topLeft;
-            paper_reader.bottomRightCorner = topLeft + boardSize;
-            paper_reader.sizeX = sidesX;
-            paper_reader.sizeY = sidesY;
+            paper_reader.sizeX = x;
+            paper_reader.sizeY = y;
             player.topLeftCorner = topLeft;
             player.bottomRightCorner = topLeft + boardSize;
-            player.sizeX = sidesX;
-            player.sizeY = sidesY;
+            player.sizeX = x;
+            player.sizeY = y;
 
-
-            // Move the cursor out of the way
-            // player.MoveCursor((int)(topLeft.X + boardSize.X), (int)(topLeft.Y + boardSize.Y));
-
-            Paper paper = paper_reader.ScanGameboard();
+            if (!paper_reader.ScanGameboard(bitmap, out Paper paper))
+                return false;
 
             Bitmap notSolvedImage = Logger.GenerateGameBoardBitmap(paper);
-            InputImageBox.Invoke(new Action(() =>
-            {
-                InputImageBox.Image = notSolvedImage;
-            }));
-
-            // gameBoardBitmap = Logger.GenerateGameBoardBitmap(board);
-            // pictureBox.Image = gameBoardBitmap;
-            // gameBoardBitmap.Save("board.png");
 
             bool solved = Paper.Solve(paper);
 
             if (solved)
             {
+
                 Print.PrintSimple(paper, false);
 
                 Bitmap solvedImage = Logger.DrawSolution(paper);
                 OutputImageBox.Invoke(new Action(() =>
                 {
+                    InputImageBox.Image = notSolvedImage;
                     OutputImageBox.Image = solvedImage;
+                    outLabel.Text = "Solved puzzle";
                 }));
 
                 if (play)
                 {
-                    player.Play(paper);
-                    play = false;
+                    player.Play(paper, false);
+                    //play = true;
+                    Bitmap result = TakeScreenshotRegion();
+                    if (paper_reader.validateGameboard(result))
+                    {
+                        player.ClickCursor(); //Release the last color because the player didnt do it
+                        Thread.Sleep(120);
+                        player.ClickNextLevel();
+                        Thread.Sleep(120);
+                    }
+                    else
+                    {
+                        OutputImageBox.Invoke(new Action(() =>
+                        {
+                            outLabel.Text = "Failed to play puzzle";
+                            play = false;
+                            SolveButton.Text = play ? "Stop" : "Play";
+                        }));
+                        player.ClickCursor();
+                        Thread.Sleep(2000);
+                    }
                 }
-                //Thread.Sleep(2000);
-                //player.ClickNextLevel();
             }
-            else
+            return solved;
+        }
+
+        Bitmap TakeScreenshotRegion()
+        {
+            Vector2 topLeft = new(1080, 166);
+            Vector2 boardSize = new(715, 715);
+            int width = (int)((topLeft + boardSize).X - topLeft.X);
+            int height = (int)((topLeft + boardSize).Y - topLeft.Y);
+            Bitmap bitmap = new Bitmap(width, height);
+            // Use the Graphics object to copy the pixel from the screen
+            using (Graphics g = Graphics.FromImage(bitmap))
             {
-                OutputImageBox.Image = null;
+                g.CopyFromScreen((int)topLeft.X, (int)topLeft.Y, 0, 0, new Size(width, height));
             }
-        }
-
-        private void XCountInput_ValueChanged(object sender, EventArgs e)
-        {
-            sidesX = (int)XCountInput.Value;
-        }
-
-        private void YCountInput_ValueChanged(object sender, EventArgs e)
-        {
-            sidesY = (int)YCountInput.Value;
+            return bitmap;
         }
     }
 }
