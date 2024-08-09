@@ -84,12 +84,12 @@ namespace Numberlink
         {
             Calls++;
 
-            // { 
-            //     Debug Purposes, will save every step of process
-            //
-            //     Bitmap gameBoardBitmap = Logger.DrawSolution(paper);
-            //     gameBoardBitmap.Save($"board{Calls}.png");
-            // }
+            /*{ 
+                // Debug Purposes, will save every step of process
+            
+                 Bitmap gameBoardBitmap = Logger.DrawSolution(paper);
+                 gameBoardBitmap.Save($"board{Calls}.png");
+            }*/
 
             // Final
             if (pos == 0)
