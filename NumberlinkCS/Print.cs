@@ -102,7 +102,7 @@
         {
             int w = paper.Width, h = paper.Height;
             char[] table = new char[w * h];
-            paper.Table.CopyTo(table);
+            paper.Table.CopyTo(table, 0);
             for (int pos1 = 0; pos1 < w * h; pos1++)
             {
                 if (paper.isSource[pos1])

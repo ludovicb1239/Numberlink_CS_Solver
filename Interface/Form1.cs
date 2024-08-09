@@ -66,7 +66,7 @@ namespace Interface
 
             Bitmap notSolvedImage = Logger.GenerateGameBoardBitmap(paper);
 
-            bool solved = Paper.Solve(paper);
+            bool solved = paper.Solve();
 
             if (solved)
             {

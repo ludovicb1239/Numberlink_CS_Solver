@@ -61,7 +61,7 @@ namespace Numberlink
                 }
             }
 
-            p = Paper.NewPaper(sizeX, sizeY, table.ToArray());
+            p = new (sizeX, sizeY, table.ToArray());
 
             p.colorLookup = new()
             {

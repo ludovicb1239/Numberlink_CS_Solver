@@ -74,7 +74,7 @@ namespace Numberlink
                     profiler.Start();
                 }
 
-                bool res = Paper.Solve(p);
+                bool res = p.Solve();
 
 
                 if (profileFlag)
@@ -98,8 +98,7 @@ namespace Numberlink
 
                 if (callsFlag)
                 {
-                    Console.WriteLine($"Called {Paper.Calls} times");
-                    Paper.Calls = 0;
+                    Console.WriteLine($"Called {p.Calls} times");
                 }
                 Console.WriteLine();
             }
