@@ -48,7 +48,7 @@
                 {
                     int pos = y * paper.Width + x;
                     char val = paper.Table[pos];
-                    char c = val == Paper.EMPTY ? TUBE[paper.Con[pos]] : val;
+                    char c = val == Paper.EMPTY ? TUBE[paper.Connections[pos]] : val;
                     if (string.IsNullOrEmpty(colors[pos]))
                     {
                         Console.Write(c);
@@ -105,7 +105,7 @@
             paper.Table.CopyTo(table);
             for (int pos1 = 0; pos1 < w * h; pos1++)
             {
-                if (paper.source[pos1])
+                if (paper.isSource[pos1])
                 {
                     Queue<int> queue = new();
                     queue.Enqueue(pos1);
@@ -116,7 +116,7 @@
                         foreach (int dir in Paper.DIRS)
                         {
                             int next = pos + paper.Vctr[dir];
-                            if ((paper.Con[pos] & dir) != 0 && table[next] == Paper.EMPTY)
+                            if ((paper.Connections[pos] & dir) != 0 && table[next] == Paper.EMPTY)
                             {
                                 table[next] = paint;
                                 queue.Enqueue(next);

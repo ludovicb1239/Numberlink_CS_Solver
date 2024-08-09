@@ -32,7 +32,7 @@ namespace Numberlink
                     for (int x = 1; x < paper.Width - 1; x++)
                     {
                         int pos = y * paper.Width + x;
-                        if (paper.source[pos] && table[pos] != Paper.EMPTY && table[pos] >= 'A')
+                        if (paper.isSource[pos] && table[pos] != Paper.EMPTY && table[pos] >= 'A')
                         {
                             DrawPoint(g, x - 1, y - 1, paper.colorLookup[table[pos]], cellSize, 30);
                         }
@@ -54,7 +54,7 @@ namespace Numberlink
                     foreach (int dir in Paper.DIRS)
                     {
                         int next = pos + paper.Vctr[dir];
-                        if ((paper.Con[pos] & dir) != 0 && table[next] == table[pos])
+                        if ((paper.Connections[pos] & dir) != 0 && table[next] == table[pos])
                         {
                             DrawLine(g, PosToLocal(paper, pos), PosToLocal(paper, next), paper.colorLookup[table[pos]], 10);
                         }

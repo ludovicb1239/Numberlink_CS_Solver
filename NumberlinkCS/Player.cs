@@ -28,7 +28,7 @@ namespace Numberlink
             List<char> doneChar = new();
             for (int pos1 = 0; pos1 < w * h; pos1++)
             {
-                if (paper.source[pos1] && !doneChar.Contains(table[pos1]))
+                if (paper.isSource[pos1] && !doneChar.Contains(table[pos1]))
                 {
 
                     MoveCursorPaper(paper, pos1);
@@ -49,7 +49,7 @@ namespace Numberlink
                         foreach (int dir in Paper.DIRS)
                         {
                             int next = pos + paper.Vctr[dir];
-                            if ((paper.Con[pos] & dir) != 0 && table[next] == Paper.EMPTY)
+                            if ((paper.Connections[pos] & dir) != 0 && table[next] == Paper.EMPTY)
                             {
                                 table[next] = paint;
                                 queue.Enqueue(next);
@@ -62,7 +62,7 @@ namespace Numberlink
                                     prevDir = dir;
                                 }
                             }
-                            else if (table[next] == paint && next != pos1 && paper.source[next])
+                            else if (table[next] == paint && next != pos1 && paper.isSource[next])
                             {
                                 if (dir != prevDir)
                                 {

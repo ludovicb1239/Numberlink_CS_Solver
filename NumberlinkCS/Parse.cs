@@ -36,9 +36,11 @@ namespace Numberlink
 
             var colors = new List<Color> { Color.Red, Color.Green, Color.Yellow, Color.Blue, Color.Olive, Color.Lime, Color.Cyan, Color.DarkBlue, Color.Turquoise, Color.Pink, Color.Orange, Color.Purple };
 
-            Dictionary<char, Color> colorsLook = new();
-            colorsLook.Add(Paper.EMPTY, Color.White);
-            colorsLook.Add(Paper.GRASS, Color.Magenta);
+            Dictionary<char, Color> colorsLook = new()
+            {
+                { Paper.EMPTY, Color.White },
+                { Paper.GRASS, Color.Magenta }
+            };
             foreach (var line in lines)
             {
                 foreach (var c in line)
