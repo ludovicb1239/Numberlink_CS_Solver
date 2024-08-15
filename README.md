@@ -14,7 +14,7 @@ Welcome to the **Free Flow Puzzle Solver**! 🧩 This open-source C# program is 
 - **Board Printing**: Writes a bitmap image of the board at any moment.
 - **Open Source**: Free to use, modify, and distribute under the MIT license.
 
-[![Watch the video](https://img.youtube.com/vi/zzv8Q1N16yk/maxresdefault.jpg)]([https://youtu.be/zzv8Q1N16yk)
+[![Watch the video](https://img.youtube.com/vi/zzv8Q1N16yk/maxresdefault.jpg)](https://youtu.be/zzv8Q1N16yk)
 
 
 
