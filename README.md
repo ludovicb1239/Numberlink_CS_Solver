@@ -10,10 +10,13 @@ Welcome to the **Free Flow Puzzle Solver**! 🧩 This open-source C# program is 
 - **Automatic Puzzle Detection**: Scans and identifies grids ranging from 5x5 to 15x15.
 - **Mouse Automation**: Moves the mouse to connect the dots after solving the puzzle. 🖱️
 - **Optimized for Windows**: Written in C# and tailored for a seamless Windows experience.
+- **Automatic Finish Scan**: Scans the board when the mouse movements are done to check if it all went well.
 - **Board Printing**: Writes a bitmap image of the board at any moment.
 - **Open Source**: Free to use, modify, and distribute under the MIT license.
 
-![Example](Example.mp4)
+[![Watch the video](https://img.youtube.com/vi/zzv8Q1N16yk/maxresdefault.jpg)]([https://youtu.be/zzv8Q1N16yk)
+
+
 
 ## 🛠️ Installation
 
