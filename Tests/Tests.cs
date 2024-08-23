@@ -60,7 +60,7 @@ namespace Tests
                         if (a2 <= b2) b2++;
 
                         Paper p = Create(new[] { new[] { a1, a2 }, new[] { b1, b2 } }, width, height);
-                        bool result = Paper.Solve(p);
+                        bool result = p.Solve();
                         if (result)
                         {
                             Print.PrintSimple(p, false);
@@ -115,7 +115,7 @@ namespace Tests
                 table[pair[0]] = (char)('A' + i); // Replace with actual SIGMA[i] if needed
                 table[pair[1]] = (char)('A' + i); // Replace with actual SIGMA[i] if needed
             }
-            return Paper.NewPaper(w, h, table);
+            return new Paper(w, h, table);
         }
     }
 }
